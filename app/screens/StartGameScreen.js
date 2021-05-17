@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Button, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, View, Text, Button, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import Card from '../components/Card';
 import Input from '../components/Input';
+import NumberContainer from '../components/NumberContainer';
 import Colors from '../constants/colors';
 
 const StartGameScreen = props => {
@@ -22,24 +23,37 @@ const StartGameScreen = props => {
     const handleSubmit = () => {
         const chosenNumber = parseInt(inputValue);
 
-        if(inputValue === NaN || inputValue > 99 || inputValue <= 0)
+        if (isNaN(chosenNumber) || inputValue > 99 || inputValue <= 0) {
+            Alert.alert('Invalid Number!', 
+            'Enter a number between 1 and 99', 
+            [{ button: 'Okay', style: 'destructive', onPress: handleReset }]
+            );
             return;
+        }
 
         setConfirmInput(true);
         setInputValue('');
         setSelectedNumber(chosenNumber);
+        Keyboard.dismiss();
     }
 
     let confirmedNumber;
 
     if (confirmInput) {
-        confirmedNumber = <Text> Chosen Number: {selectedNumber} </Text>
+        confirmedNumber = (
+            <Card style={styles.summaryContainer}>
+                <Text> You Chose </Text>
+                <NumberContainer>{selectedNumber}</NumberContainer>
+                <Button title="START GAME" onPress={() => props.setUserChoice(selectedNumber)} />
+            </Card>
+            
+        )
     }
 
     return (
         <TouchableWithoutFeedback onPress={() => {
             Keyboard.dismiss();
-        }} >
+        }}>
             <View style={styles.screen}>
                 <Text style={styles.title}>Start a new game!</Text>
                 <Card style={styles.inputContainer}>
@@ -94,6 +108,10 @@ const styles = StyleSheet.create({
     },
     input: {
         width: 50
+    },
+    summaryContainer: {
+        marginTop: 20,
+        alignItems: 'center'
     }
 });
 
