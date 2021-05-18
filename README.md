@@ -3,6 +3,12 @@ Time for React Naatiive!
 
 Some Key Points for refernce:
 
+- expo init app-name
+- Width 100% for flex-box
+- Add background color for box shadow
+- Add styles to View instead of button or text
+
+-------------------------------------------
 **Alert**
 
 import { Alert } from ‘react-native’;
@@ -11,7 +17,7 @@ import { Alert } from ‘react-native’;
 **Fonts**
 
 In App.js
-
+```
 expo install expo-app-loading
 
 import * as Font from 'expo-font';
@@ -35,7 +41,7 @@ const fetchFonts = () => {
       />
     ) 
   }
-
+```
 
 - React Native supports adding fontWeight but Expo does not. We need to import different weighted fonts.
 - We cannot set fontFamily to ‘view’. We can only set it to ‘text’.
@@ -43,9 +49,10 @@ const fetchFonts = () => {
 
 -------------------------------------------
 **Image**
-
+```
 <Image source={require(‘../assets/filename} />
 <Image source={require({uri: ’link’}) />
+```
 
 - We should always set width and height to image loaded from uri.
 
