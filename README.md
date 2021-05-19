@@ -75,4 +75,133 @@ const fetchFonts = () => {
 - https://stackoverflow.com/questions/46805135/scrollview-with-flex-1-makes-it-un-scrollable
 
 - In scrollView we use map function to render the list
--FlatList takes in a data prop, renderItem prop (callback), keyExtractor prop.
+- FlatList takes in a data prop, renderItem prop (callback), keyExtractor prop.
+
+-------------------------------------------
+**Icons**
+
+https://icons.expo.fyi/
+	Go to the above to view all available icons and their code.
+- https://docs.expo.io/guides/icons/#expovector-icons
+
+-------------------------------------------
+
+## Responsiveness
+
+{
+   width: ’80%’,
+   maxWidth: ’95%’,
+   minWidth: 300
+}
+
+**Dimensions API**
+
+Dimensions.get(‘window’).width , .height
+
+Ex: 
+- marginTop: Dimensions.get(‘window’).height > 600 ? 20 : 5
+- style = { Dimensions.get(‘window’).height > 600 ? styles.className1 : styles.className2 }
+
+Also we can use if conditions for better readability.
+	
+  ```
+  let listContainerStyle = styles.listContainerBig
+  
+	if (Dimensions.get(‘window’).width < 350) 
+		listContainerStyle = styles.listContainer
+    
+	// Add listContainerStyle to element.
+  
+  ```
+
+-------------------------------------------
+**Device Orientation**
+
+In app.json
+
+orientation: default, portrait, landscape
+
+-------------------------------------------
+**Avoid covering input field by Keypad**
+
+```
+<KeyboardAvoidingView behaviour=“position” keyboardVerticalOffset={30}>
+```
+
+-------------------------------------------
+**Listening to orientation changes**
+
+- Having a fixed width (style) for elements (Ex: buttonsContainer) makes the layout look less pretty for different orientations.
+- For this reason, we need to listen to device orientation changes and set styles dynamically. 
+
+```
+const [buttonWidth, setButtonWidth] = useState(Dimensions.get(‘window’).width/4);
+
+useEffect( ( ) => {
+  const updateLayout = ( ) => {
+	setButtonWidth(Dimensions.get(‘window’).width / 4);	
+  };
+  Dimensions.addEventListener(‘change’, updateLayout);
+  ( ) => {
+	Dimensions.removeEventListener(‘change’, updateLayout)   }
+}, [])
+
+// This buttonWidth should be used as inline style.
+      
+    style={{width: buttonWidth, …styles.buttonContainer }}
+    
+```
+
+-------------------------------------------
+**Platform API**
+
+- Platform.OS === ‘android’ , ’iOS’
+
+- Platform Select
+
+```
+style={{
+     …styles.headerBase,	
+     …Platform.select({
+	ios: styles.headerIOS,
+	android: styles.headerAndroid	
+     })
+}}
+```
+
+- Different touchable feedback based on platform
+
+```
+let ButtonComponent = TouchableOpacity;
+
+if (Platform.OS === ‘android’ && Platform.Version >= 21) {
+    ButtonComponent = TouchableNativeFeedback;
+}
+
+return (
+     <View style={styles.buttonContainer}>
+ 	<ButtonComponent>
+		…
+	</ButtonComponent>
+     </View>
+)
+
+// styles
+buttonContainer : {
+    borderRadius: 25,
+    overflow: ‘hidden'
+}
+
+// This style ensures ripple effect (square) doesn’t overflow on android.
+```
+
+- If there are lot of changes in code depending on platform, use two different files:
+	  ComponentName.android.js, ComponentName.ios.js
+	  import ComponenetName from ‘…’ //without extension
+
+- Platform.Version
+
+-------------------------------------------
+**SafeAreaView**
+
+- Ensures your app is not cut off by device widgets like notification bar, etc..
